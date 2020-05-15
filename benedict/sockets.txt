@@ -1,0 +1,19 @@
+The following are all types of socket.on calls
+
+'connect' client.js:193
+'handshake' client.js:200
+'updategames' client.js:208
+'updateplayers' client.js:211
+'globalchatmessage' client.js:214
+'alert' client.js:220
+'disconnect' client.js:224
+'state' client.js:230
+'history' client.js:250
+'chat' client.js:269
+'created' client.js:282
+'joined' client.js:287
+'error' client.js:302
+'game-error' client.js:305
+'rankings' client.js:308
+'gamenodefound' client.js:311
+'incorrectpassword' client.js:316
