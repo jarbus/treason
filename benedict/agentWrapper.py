@@ -102,6 +102,8 @@ class TreasonAgentWrapper:
     def _onState(self, data: Dict[str, object]):
         """Function to handle state updates"""
         # Automatically start a game
+        print('GameId:', data['gameId'])
+        print('Players:', len(data['players']))
         if data['state']['name'] == 'waiting-for-players' and len(data['players']) == self.agent.kplayer:
                 self._sio.emit('command',{
                     'command': 'start',

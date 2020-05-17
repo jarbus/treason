@@ -5,12 +5,16 @@ from agentWrapper import TreasonAgentWrapper
 
 K = 2 # the number of players in a game
 
-agent = TreasonAgent("benedict", K)
-agent2 = TreasonAgent("arnold", K)
+#agent = TreasonAgent("benedict", K)
+#agent2 = TreasonAgent("arnold", K)
 
 
-wrap = TreasonAgentWrapper(agent)
-wrap2 = TreasonAgentWrapper(agent2)
+#wrap = TreasonAgentWrapper(agent)
+#wrap2 = TreasonAgentWrapper(agent2)
+
+NAMES = "benedict1 arnold1 benedict2 arnold2 benedict3 arnold3 benedict4 arnold4".split()
+
+agents = [TreasonAgentWrapper(TreasonAgent(name, K)) for name in NAMES]
 
 global variable
 variable = 0
@@ -36,28 +40,44 @@ def createLobbyFn(players):
             player.joinGame(gameName)
     return addOtherPlayers
 
-lobby = createLobbyFn([wrap2])
+#lobby = createLobbyFn([wrap2])
+for a in agents:
+    a.connect("http://localhost:8080")
 
-wrap.registerCallbacks(
-    onRegister=printRegister,
-    onJoinGame=printJoin,
-    onCreatedGame=lobby
-)
+lobby1 = createLobbyFn([agents[0],agents[1]])
+agents[0].registerCallbacks(onCreatedGame=lobby1)
+lobby2 = createLobbyFn([agents[2],agents[3]])
+agents[2].registerCallbacks(onCreatedGame=lobby2)
+lobby3 = createLobbyFn([agents[4],agents[5]])
+agents[4].registerCallbacks(onCreatedGame=lobby3)
+lobby4 = createLobbyFn([agents[6],agents[7]])
+agents[6].registerCallbacks(onCreatedGame=lobby4)
 
-wrap.connect("http://localhost:8080")
-wrap2.connect("http://localhost:8080")
+time.sleep(5)
 
-time.sleep(1)
-wrap.createGame()
 
-time.sleep(1)
+# wrap.registerCallbacks(
+#     onRegister=printRegister,
+#     onJoinGame=printJoin,
+#     onCreatedGame=lobby
+# )
+
+#wrap.connect("http://localhost:8080")
+#wrap2.connect("http://localhost:8080")
+
+for i in range(len(agents)):
+    if i % 2 == 0:
+        agents[i].createGame()
+#wrap.createGame()
+
 
 # Co-routine doesn't modify variable
-print("Final: {}".format(variable))
-print(wrap2.gameName)
+#print("Final: {}".format(variable))
+#print(wrap2.gameName)
 
 print("press enter to end the test")
 input("")
-
-wrap.disconnect()
-wrap2.disconnect()
+for a in agents:
+    a.disconnect()
+#wrap.disconnect()
+#wrap2.disconnect()
