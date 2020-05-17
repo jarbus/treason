@@ -21,6 +21,7 @@ class TreasonAgentWrapper:
         self._sio.on("handshake", handler=self._onRegister)
         self._sio.on("joined", handler=self._onJoinGame)
         self._sio.on("created", handler=self._onCreatedGame)
+        self._sio.on("state", handler=self._onState)
 
     # TODO: callbacks + coroutines = bad
     def registerCallbacks(self, *,
@@ -98,3 +99,12 @@ class TreasonAgentWrapper:
         self.joinGame(data["gameName"])
         if self._onCreatedGameCallback is not None:
             self._onCreatedGameCallback(data["gameName"])
+    def _onState(self, data: Dict[str, object]):
+        """Function to handle state updates"""
+        # Automatically start a game
+        if data['state']['name'] == 'waiting-for-players' and len(data['players']) == self.agent.kplayer:
+                self._sio.emit('command',{
+                    'command': 'start',
+                    'gameType':'original',
+                    'stateId':str(data['stateId'])
+                })

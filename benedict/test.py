@@ -3,8 +3,11 @@ import time
 from agent import TreasonAgent
 from agentWrapper import TreasonAgentWrapper
 
-agent = TreasonAgent("benedict")
-agent2 = TreasonAgent("arnold")
+K = 2 # the number of players in a game
+
+agent = TreasonAgent("benedict", K)
+agent2 = TreasonAgent("arnold", K)
+
 
 wrap = TreasonAgentWrapper(agent)
 wrap2 = TreasonAgentWrapper(agent2)
