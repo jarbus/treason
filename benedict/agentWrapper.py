@@ -63,7 +63,7 @@ class TreasonAgentWrapper:
 
         self._playerId = None
         self._gameName = None
-        self._sio.disconect()
+        self._sio.disconnect()
 
     def createGame(self):
         if self._playerId is None:
