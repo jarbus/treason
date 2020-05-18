@@ -3,6 +3,9 @@ import time
 from agent import TreasonAgent
 from agentWrapper import TreasonAgentWrapper
 
+from gameState import GameState
+from nnio import state_to_vector
+
 K = 2 # the number of players in a game
 
 #agent = TreasonAgent("benedict", K)
@@ -74,6 +77,56 @@ for i in range(len(agents)):
 # Co-routine doesn't modify variable
 #print("Final: {}".format(variable))
 #print(wrap2.gameName)
+
+# Test nnio
+start = time.clock()
+state_dict = {
+    "stateId": 2,
+    "gameId": 1,
+    "playerIdx": 1,
+    "players": [
+        {  # Test empty influence list (waiting for players)
+            "influence": [
+            #     {
+            #         "role": "unknown",
+            #         "revealed": False
+            #     },
+            #     {
+            #         "role": "assassin",
+            #         "revealed": True
+            #     }
+            ],
+            "cash": 7
+        },
+        {
+            "influence": [
+                {
+                    "role": "duke",
+                    "revealed": False
+                },
+                {
+                    "role": "ambassador",
+                    "revealed": True
+                }
+            ],
+            "cash": 8
+        }
+    ],
+    "state": {  # ignore the validity of this gamestate
+        "playerIdx": 0,
+        "name": "final-action-response",
+        "target": 1,
+        "action": "exchange",
+        "exchangeOptions": ["ambassador", "duke"],
+        "playerToReveal": 1,
+        "blockingRole": "ambassador"
+    }
+}
+end = time.clock()
+print(end - start)
+
+game_state = GameState(state_dict)
+print(state_to_vector(game_state))
 
 print("press enter to end the test")
 input("")

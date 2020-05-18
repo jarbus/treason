@@ -14,6 +14,7 @@ class GameState:
     def __init__(self, data: Dict[str, object]):
         self._stateId = data["stateId"]
         self._gameId = data["gameId"]
+        self._selfId = data["playerIdx"]
         self._players = []
         for player in data["players"]:
             if player["influence"]:  # if empty list
@@ -30,7 +31,7 @@ class GameState:
         self._target = state["target"] if "target" in state else None
         self._exchanges = [TreasonRole(r) for r in state["exchangeOptions"]] if "exchangeOptions" in state else None
         self._blockingRole = TreasonRole(state["blockingRole"]) if "blockingRole" in state else None
-        self._reveal = TreasonRole(state["playerToReveal"]) if "playerToReveal" in state else None
+        self._reveal = state["playerToReveal"] if "playerToReveal" in state else None
         self._action = TreasonAction(state["action"]) if "action" in state else None
 
     @property
@@ -40,6 +41,10 @@ class GameState:
     @property
     def stateId(self) -> int:
         return self._stateId
+
+    @property
+    def selfId(self) -> int:
+        return self._selfId
 
     @property
     def state(self) -> TreasonState:
@@ -53,11 +58,9 @@ class GameState:
     def numPlayers(self) -> int:
         return len(self._players)
 
-    @property
     def influence(self, player: int) -> List[Tuple[TreasonRole, bool]]:
         return self._players[player].roles
 
-    @property
     def cash(self, player: int) -> int:
         return self._players[player].cash
 
