@@ -53,14 +53,14 @@ actions = {
     TreasonAction.EXCHANGE: 6
 }
 
-commands = [
-    TreasonCommand.ACTION,
-    TreasonCommand.BLOCK,
-    TreasonCommand.CHALLENGE,
-    TreasonCommand.ALLOW,
-    TreasonCommand.REVEAL,
-    TreasonCommand.EXCHANGE
-]
+commands = {
+    TreasonCommand.ACTION: 0,
+    TreasonCommand.BLOCK: 1,
+    TreasonCommand.CHALLENGE: 2,
+    TreasonCommand.ALLOW: 3,
+    TreasonCommand.REVEAL: 4,
+    TreasonCommand.EXCHANGE: 5
+}
 
 # convert the dictionary into a vector (list)
 # state is a dictionary as specified in the treason coup README
@@ -137,10 +137,11 @@ def state_to_vector(state: GameState):
 def vec_argmax(vector, offset, enum):
     res = ""
     confidence = -1.0
-    for i,e in enumerate(enum):
+    for i,v in enumerate(enum):
         val = vector[offset+i] 
+        print(i, val, confidence, v, res)
         if val > confidence:
-            res = e
+            res = v
             confidence = val
     return res
 
@@ -160,19 +161,20 @@ def vector_to_emission(vector, state: GameState):
     # action
     action = -1
     if command == TreasonCommand.ACTION:
-        vec_argmax(vector, start_position, actions)
+        action = vec_argmax(vector, start_position, actions)
         emission["action"] = action.value
     start_position += len(actions)
 
     # target
     if "action" in emission and action in {TreasonAction.STEAL, TreasonAction.ASSASSINATE, TreasonAction.COUP}:
-        target = vec_argmax(vector, offset, [i+1 for i in range(numPlayers-1)])
-        target = (target-state.selfId) % len(state.players)
-        emission["target"] = target.value
+        n_players = len(state.players)
+        target = vec_argmax(vector, start_position, [i+1 for i in range(n_players-1)])
+        target = (target-state.selfId) % n_players
+        emission["target"] = target
     start_position += len(actions)
 
     # blockingRole
-    if commmand == TreasonCommand.BLOCK:
+    if command == TreasonCommand.BLOCK:
         blockingRole = ""
         cur = state.currentAction
         if cur == TreasonAction.F_AID:
