@@ -79,7 +79,7 @@ for i in range(len(agents)):
 #print(wrap2.gameName)
 
 # Test nnio
-start = time.clock()
+start = time.time()
 for i in range(5000):
     state_dict = {
         "stateId": 2,
@@ -126,7 +126,7 @@ for i in range(5000):
     game_state = GameState(state_dict)
     state_to_vector(game_state)
     print(i)
-end = time.clock()
+end = time.time()
 print(end - start)
 
 
