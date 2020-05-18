@@ -53,6 +53,15 @@ actions = {
     TreasonAction.EXCHANGE: 6
 }
 
+commands = [
+    TreasonCommand.ACTION,
+    TreasonCommand.BLOCK,
+    TreasonCommand.CHALLENGE,
+    TreasonCommand.ALLOW,
+    TreasonCommand.REVEAL,
+    TreasonCommand.EXCHANGE
+]
+
 # convert the dictionary into a vector (list)
 # state is a dictionary as specified in the treason coup README
 def state_to_vector(state: GameState):
@@ -120,3 +129,84 @@ def state_to_vector(state: GameState):
         vec[start_position + rotated_id] = 1
 
     return vec
+
+
+
+# the output vector is subdivided into regions specifying the confidence with
+# respect to certain actions, and this functions parses out the meaning
+def vec_argmax(vector, offset, enum):
+    res = ""
+    confidence = -1.0
+    for i,e in enumerate(enum):
+        val = vector[offset+i] 
+        if val > confidence:
+            res = e
+            confidence = val
+    return res
+
+
+# convert the neural network's output into a python dictionary which can be .emit-ed to the server as a command
+def vector_to_state(vector, state: GameState):
+    # a python dictionary representing the emission the bot sends to the server
+    emission = dict()
+    # vector offset
+    start_position = 0
+
+    # command
+    command = vec_argmax(vector, start_position, commands)
+    emission["command"] = command
+    start_position += len(commands)
+
+    # action
+    if command == TreasonCommand.ACTION:
+        action = vec_argmax(vector, start_position, enum)
+        emission["action"] = action
+    start_position += len(actions)
+
+    # target
+    if "action" in emission and emission["action"] in {TreasonAction.STEAL, TreasonAction.ASSASSINATE, TreasonAction.COUP}:
+        target = vec_argmax(vector, offset, [i+1 for i in range(numPlayers-1)])
+        target = (target-state.selfId) % len(state.players)
+        emission["target"] = target
+    start_position += len(actions)
+
+    # blockingRole
+    if commmand == TreasonCommand.BLOCK:
+        blockingRole = ""
+        cur = state.currentAction
+        if cur == TreasonAction.F_AID:
+            blockingRole = TreasonRole.DUKE
+        if cur == TreasonAction.ASSASSINATE:
+            blockingRole = TreasonRole.CONTESSA
+        # if current action is steal, interpret this to be captain versus ambassador
+        if cur == TreasonAction.STEAL:
+           if vector[start_position] < 0.5
+                blockingRole = TreasonRole.CAPTAIN
+            else
+                blockingRole = TreasonRole.AMBASSADOR
+        emission["blockingRole"] = blockingRole
+    start_position += 1
+
+    # challenge and allow commands have no additional paramaters, so we move on
+
+    # reveal ("role")
+    if command == TreasonCommand.REVEAL:
+        card = vec_argmax(vector, start_position, cards)
+        emission["role"] = card
+    start_position += len(cards)
+
+    # exchange ("roles")
+    if command == TreasonCommand.EXCHANGE:
+        card1 = vec_argmax(vector, start_position, cards)
+        start_position += len(cards)
+        card2 = vec_argmax(vector, start_position, cards)
+        emission["roles"] = [card1, card2]
+        
+    return emission
+
+
+    
+
+
+
+

@@ -27,6 +27,7 @@ class TreasonCommand(Enum):
     ADD_AI = "add-ai"
     ACTION = "play-action"
     BLOCK = "block"
+    CHALLENGE = "challenge"
     ALLOW = "allow"
     REVEAL = "reveal"
     EXCHANGE = "exchange"
