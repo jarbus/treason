@@ -58,12 +58,13 @@ actions = {
 def state_to_vector(state: GameState):
     card_vec_size = len(cards) + 1
 
-    player_vec_size = ((card_vec_size * 2) + 1) * state.numPlayers
+    player_vec_size = (card_vec_size * 2) + 1
+    players_vec_size = player_vec_size * state.numPlayers
     # (turn, target, reveal) + (exchange) + (state) + (action) + (blocking)
     game_vec_size = (3*state.numPlayers) + (2*len(cards)) + len(states) + len(actions) + len(blocking_cards)
 
     # https://stackoverflow.com/questions/20816600/best-and-or-fastest-way-to-create-lists-in-python
-    vec = [0] * (player_vec_size + game_vec_size)
+    vec = [0] * (players_vec_size + game_vec_size)
 
     # rotate the players list so that the perspective is consistent
     for counter in range(state.numPlayers):
@@ -80,7 +81,7 @@ def state_to_vector(state: GameState):
         vec[player_vec_start + (2 * card_vec_size)] = state.cash(player_idx)
 
     # list representing current turn
-    start_position = player_vec_size
+    start_position = players_vec_size
     if state.playerTurn is not None:
         vec[start_position + state.playerTurn] = 1
 

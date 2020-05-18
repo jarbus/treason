@@ -123,7 +123,8 @@ for i in range(5000):
         }
     }
     game_state = GameState(state_dict)
-    state_to_vector(game_state)
+    vectorization = state_to_vector(game_state)
+    print(vectorization)
 end = time.time()
 print("Time for 5000 conversions to vector:", end - start)
 print("Average time per call:",str((end - start) / 5.0)+"ms")
