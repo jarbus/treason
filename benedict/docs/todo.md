@@ -3,6 +3,7 @@
 * `vector_to_state`
 * Training/gradient manager
 * a3c model seems promising
+* make library a module
 
 # Race Condition
 during training, priority for challenging determined by id, with randomizing ids between games this should be fine
