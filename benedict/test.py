@@ -56,8 +56,6 @@ agents[4].registerCallbacks(onCreatedGame=lobby3)
 lobby4 = createLobbyFn([agents[6],agents[7]])
 agents[6].registerCallbacks(onCreatedGame=lobby4)
 
-time.sleep(5)
-
 
 # wrap.registerCallbacks(
 #     onRegister=printRegister,
@@ -125,9 +123,9 @@ for i in range(5000):
     }
     game_state = GameState(state_dict)
     state_to_vector(game_state)
-    print(i)
 end = time.time()
-print(end - start)
+print("Time for 5000 conversions to vector:", end - start)
+print("Average time per call:",str((end - start) / 5.0)+"ms")
 
 
 print("press enter to end the test")

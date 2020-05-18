@@ -111,8 +111,6 @@ class TreasonAgentWrapper:
 
         state = GameState(data)
         # Automatically start a game
-        print('GameId:', state.gameId)
-        print('Players:', state.numPlayers)
         if state.state == TreasonState.WAITING and state.numPlayers >= self.agent.kplayer:
             self._sio.emit('command', {
                 'command': 'start',
