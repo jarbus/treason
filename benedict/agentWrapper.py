@@ -3,6 +3,8 @@ import socketio
 from typing import Callable, Dict
 
 from agent import TreasonAgent
+from gameEnum import TreasonState
+from gameState import GameState
 
 
 # socketio decorators don't work with classes
@@ -99,14 +101,21 @@ class TreasonAgentWrapper:
         self.joinGame(data["gameName"])
         if self._onCreatedGameCallback is not None:
             self._onCreatedGameCallback(data["gameName"])
+
     def _onState(self, data: Dict[str, object]):
         """Function to handle state updates"""
+        # There's an odd case where the data is empty
+        if data is None:
+            print("Warning: Received empty state message")
+            return
+
+        state = GameState(data)
         # Automatically start a game
-        print('GameId:', data['gameId'])
-        print('Players:', len(data['players']))
-        if data['state']['name'] == 'waiting-for-players' and len(data['players']) == self.agent.kplayer:
-                self._sio.emit('command',{
-                    'command': 'start',
-                    'gameType':'original',
-                    'stateId':str(data['stateId'])
-                })
+        print('GameId:', state.gameId)
+        print('Players:', state.numPlayers)
+        if state.state == TreasonState.WAITING and state.numPlayers == self.agent.kplayer:
+            self._sio.emit('command', {
+                'command': 'start',
+                'gameType': ' original',
+                'stateId': state.stateId
+            })
