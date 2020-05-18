@@ -1,5 +1,4 @@
 import socketio
-
 from typing import Callable, Dict
 
 from benedict.agent import TreasonAgent
