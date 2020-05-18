@@ -1,5 +1,11 @@
 import time
-import sys
+import argparse
+import random
+
+parser = argparse.ArgumentParser()
+parser.add_argument('num_games',help="number of games you want to manage", type=int)
+parser.add_argument('game_size',help="number of players in each game", type=int)
+args = parser.parse_args()
 
 from benedict.agent import TreasonAgent
 from benedict.agentWrapper import TreasonAgentWrapper
@@ -7,12 +13,10 @@ from benedict.agentWrapper import TreasonAgentWrapper
 from benedict.gameState import GameState
 from benedict.nnio import state_to_vector
 
-K = 2 # the number of players in a game
+NAME_FILE=open('../../names.txt','r')
+names = [name.strip() for name in NAME_FILE]
+print(names)
 
-
-NAMES = "benedict1 arnold1 benedict2 arnold2 benedict3 arnold3 benedict4 arnold4".split()
-
-agents = [TreasonAgentWrapper(TreasonAgent(name, K)) for name in NAMES]
 
 def createLobbyFn(players):
     def addOtherPlayers(gameName):
@@ -20,9 +24,11 @@ def createLobbyFn(players):
             player.joinGame(gameName)
     return addOtherPlayers
 
-#lobby = createLobbyFn([wrap2])
-for a in agents:
-    a.connect("http://localhost:8080")
+
+for game in range(args.num_games):
+    lobby_agents = [TreasonAgentWrapper(TreasonAgent(random.choice(names), args.game_size)) for i in args.game_size]
+    for a in agents:
+        a.connect("http://localhost:8080")
 
 lobby1 = createLobbyFn([agents[0],agents[1]])
 agents[0].registerCallbacks(onCreatedGame=lobby1)
