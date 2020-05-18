@@ -2,9 +2,9 @@ import socketio
 
 from typing import Callable, Dict
 
-from agent import TreasonAgent
-from gameEnum import TreasonState
-from gameState import GameState
+from benedict.agent import TreasonAgent
+from benedict.gameEnum import TreasonState
+from benedict.gameState import GameState
 
 
 # socketio decorators don't work with classes

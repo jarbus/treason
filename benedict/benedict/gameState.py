@@ -1,5 +1,5 @@
 from typing import Dict, List, Tuple
-from gameEnum import TreasonState, TreasonRole, TreasonAction
+from benedict.gameEnum import TreasonState, TreasonRole, TreasonAction
 
 
 class Player:

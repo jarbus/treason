@@ -1,4 +1,5 @@
 import time
+import sys
 
 from benedict.agent import TreasonAgent
 from benedict.agentWrapper import TreasonAgentWrapper
@@ -8,34 +9,10 @@ from benedict.nnio import state_to_vector
 
 K = 2 # the number of players in a game
 
-#agent = TreasonAgent("benedict", K)
-#agent2 = TreasonAgent("arnold", K)
-
-
-#wrap = TreasonAgentWrapper(agent)
-#wrap2 = TreasonAgentWrapper(agent2)
 
 NAMES = "benedict1 arnold1 benedict2 arnold2 benedict3 arnold3 benedict4 arnold4".split()
 
 agents = [TreasonAgentWrapper(TreasonAgent(name, K)) for name in NAMES]
-
-global variable
-variable = 0
-print("variable is initialized to {}".format(variable))
-
-def printRegister(thing):
-    global variable
-    print("onRegisterCallback: param is {}".format(thing))
-    print("variable is {}".format(variable))
-    variable = thing
-    print("variable is now {}".format(variable))
-
-def printJoin(thing):
-    global variable
-    print("onJoinCallback: param is {}".format(thing))
-    print("variable is {}".format(variable))
-    variable = thing
-    print("variable is now {}".format(variable))
 
 def createLobbyFn(players):
     def addOtherPlayers(gameName):
@@ -57,25 +34,9 @@ lobby4 = createLobbyFn([agents[6],agents[7]])
 agents[6].registerCallbacks(onCreatedGame=lobby4)
 
 
-# wrap.registerCallbacks(
-#     onRegister=printRegister,
-#     onJoinGame=printJoin,
-#     onCreatedGame=lobby
-# )
-
-#wrap.connect("http://localhost:8080")
-#wrap2.connect("http://localhost:8080")
-
-time.sleep(0.01)
 for i in range(len(agents)):
     if i % 2 == 0:
         agents[i].createGame()
-#wrap.createGame()
-
-
-# Co-routine doesn't modify variable
-#print("Final: {}".format(variable))
-#print(wrap2.gameName)
 
 # Test nnio
 start = time.time()
@@ -133,5 +94,3 @@ print("press enter to end the test")
 input("")
 for a in agents:
     a.disconnect()
-#wrap.disconnect()
-#wrap2.disconnect()

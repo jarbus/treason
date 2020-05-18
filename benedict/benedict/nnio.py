@@ -3,8 +3,8 @@ this file contains functions for
 converting socketio state messages into the neural network input and
 converting the neural network output into command messages
 '''
-from gameEnum import TreasonState, TreasonRole, TreasonAction
-from gameState import GameState
+from benedict.gameEnum import TreasonState, TreasonRole, TreasonAction
+from benedict.gameState import GameState
 
 # rotates a list so that the element at index i becomes index 0
 # def rotate(lst, i):
