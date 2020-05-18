@@ -1,8 +1,7 @@
 # Todo
-
-* Asyncronous code
-* Game controller
-* Design input embeddings for network
+* Game manager
+* `vector_to_state`
+* Training/gradient manager
 * a3c model seems promising
 
 # Race Condition
