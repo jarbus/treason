@@ -1,6 +1,7 @@
 import time
 
 from benedict.agent import TreasonAgent
+from benedict.dummyAgent import DummyAgent
 from benedict.agentWrapper import TreasonAgentWrapper
 
 from benedict.gameState import GameState
@@ -17,7 +18,7 @@ K = 2 # the number of players in a game
 
 NAMES = "benedict1 arnold1 benedict2 arnold2 benedict3 arnold3 benedict4 arnold4".split()
 
-agents = [TreasonAgentWrapper(TreasonAgent(name, K)) for name in NAMES]
+agents = [TreasonAgentWrapper(DummyAgent(name, K)) for name in NAMES]
 
 global variable
 variable = 0

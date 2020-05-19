@@ -161,6 +161,7 @@ def vector_to_emission(vector, state: GameState):
     # command
     command = vec_argmax(vector, start_position, commands)
     emission["command"] = command.value
+    emission["stateId"] = state.stateId
     start_position += len(commands)
 
     # action

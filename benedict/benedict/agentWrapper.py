@@ -121,8 +121,13 @@ class TreasonAgentWrapper:
         # we are in a game: use the agent to play
         else:
             vectorized_state = state_to_vector(state)
-            # TO DO: make agent.process an actual function
-            nn_output = self.agent.process(vectorized_state)
-            emission_data = vector_to_emission(nn_output)
+
+            # USED FOR DummyAgent-- TODO - make DummyAgent work with vector input
+            nn_output = self.agent.process(state)
+
+            # we should really use the commented-out line below
+            # nn_output = self.agent.process(vectorized_state)
+            emission_data = vector_to_emission(nn_output, state)
             # TO DO: verify if emission_data is a valid response given the state
-            self._sio.emit('command', emission_data)
+            if emission_data:
+                self._sio.emit('command', emission_data)
