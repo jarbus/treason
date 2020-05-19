@@ -116,7 +116,7 @@ def state_to_vector(state: GameState):
         vec[start_position + blocking_cards[state.blockingRole]] = 1
 
     # list representing exchange options
-    start_position += len(blocking_cards)
+    start_position += 1
     if state.exchanges is not None:
         for idx, card in enumerate(state.exchanges):
             exchange_card_start = start_position + (idx * len(cards))
@@ -139,7 +139,6 @@ def vec_argmax(vector, offset, enum):
     confidence = -1.0
     for i,v in enumerate(enum):
         val = vector[offset+i] 
-        print(i, val, confidence, v, res)
         if val > confidence:
             res = v
             confidence = val
@@ -173,9 +172,8 @@ def vector_to_emission(vector, state: GameState):
 
     # target
     if "action" in emission and action in {TreasonAction.STEAL, TreasonAction.ASSASSINATE, TreasonAction.COUP}:
-        n_players = len(state.players)
-        target = vec_argmax(vector, start_position, [i+1 for i in range(n_players-1)])
-        target = (target-state.selfId) % n_players
+        target = vec_argmax(vector, start_position, [i for i in range(1, state.numPlayers)])
+        target = (target-state.selfId) % state.numPlayers
         emission["target"] = target
     start_position += len(actions)
 

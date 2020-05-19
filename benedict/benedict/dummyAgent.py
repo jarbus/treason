@@ -23,11 +23,12 @@ class DummyAgent(TreasonAgent):
 
         if state.state == TreasonState.WAITING:
             print("AAAAAAAAAAAAAAAAAAAAAAAAAH")
-            return [0]
+            nn_output[0] = 0
 
         if state.state == TreasonState.START_TURN:
             # only do something if it is our turn
             if state.playerTurn == state.selfId:
+                command = TreasonCommand.ACTION
                 # if we have 7 or more coins, coup someone
                 if state.cash(state.selfId) >= 7:
                     action = TreasonAction.COUP
@@ -41,7 +42,7 @@ class DummyAgent(TreasonAgent):
                 else:
                     action = TreasonAction.INCOME
             else:
-                return [0]
+                nn_output[0] = 0
 
         if state.state == TreasonState.WAIT_CHALLENGE_RESPONSE:
             command = TreasonCommand.ALLOW
@@ -55,16 +56,20 @@ class DummyAgent(TreasonAgent):
         if state.state == TreasonState.REVEAL:
             # check if we are the one that needs to reveal
             if state.revealTarget == state.selfId:
+                command = TreasonCommand.REVEAL
                 # pick an influence to reveal
                 our_cards = state.influence(state.selfId)
+
                 # check if we can reveal our first card
                 if not our_cards[0][1]:
                     reveal = our_cards[0][0]
                 else:
                     reveal = our_cards[1][0]
+            else:
+                nn_output[0] = 0
 
         if state.state == TreasonState.EXCHANGE:
-            return [0]
+            nn_output[0] = 0
 
         nn_output += listify(command, commands)
         nn_output += listify(action, actions)
@@ -74,4 +79,4 @@ class DummyAgent(TreasonAgent):
         nn_output += listify(None, cards) # exchange cards will always be 0
         nn_output += listify(None, cards)
 
-        return vector_to_emission(nn_output)
+        return vector_to_emission(nn_output, state)
