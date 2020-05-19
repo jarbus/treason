@@ -4,6 +4,7 @@ from typing import Callable, Dict
 from benedict.agent import TreasonAgent
 from benedict.gameEnum import TreasonState
 from benedict.gameState import GameState
+from benedict.nnio import state_to_vector, vector_to_emission
 
 
 # socketio decorators don't work with classes
@@ -110,9 +111,18 @@ class TreasonAgentWrapper:
 
         state = GameState(data)
         # Automatically start a game
-        if state.state == TreasonState.WAITING and state.numPlayers >= self.agent.kplayer:
-            self._sio.emit('command', {
-                'command': 'start',
-                'gameType': ' original',
-                'stateId': state.stateId
-            })
+        if state.state == TreasonState.WAITING:
+            if state.numPlayers >= self.agent.kplayer:
+                self._sio.emit('command', {
+                    'command': 'start',
+                    'gameType': ' original',
+                    'stateId': state.stateId
+                })
+        # we are in a game: use the agent to play
+        else:
+            vectorized_state = state_to_vector(state)
+            # TO DO: make agent.process an actual function
+            nn_output = self.agent.process(vectorized_state)
+            emission_data = vector_to_emission(nn_output)
+            # TO DO: verify if emission_data is a valid response given the state
+            self._sio.emit('command', emission_data)
