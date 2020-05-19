@@ -147,11 +147,16 @@ def vec_argmax(vector, offset, enum):
 
 
 # convert the neural network's output into a python dictionary which can be .emit-ed to the server as a command
+# returns None if the network decides to NO-OP
 def vector_to_emission(vector, state: GameState):
     # a python dictionary representing the emission the bot sends to the server
     emission = dict()
     # vector offset
-    start_position = 0
+    start_position = 1
+
+    # the first entry signifies whether or not the network NO-OPs (i.e. no emission)
+    if vector[0] < 0.5:
+        return None
 
     # command
     command = vec_argmax(vector, start_position, commands)
