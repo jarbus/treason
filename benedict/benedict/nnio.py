@@ -175,7 +175,7 @@ def vector_to_emission(vector, state: GameState):
         target = vec_argmax(vector, start_position, [i for i in range(1, state.numPlayers)])
         target = (target-state.selfId) % state.numPlayers
         emission["target"] = target
-    start_position += len(actions)
+    start_position += state.numPlayers-1
 
     # blockingRole
     if command == TreasonCommand.BLOCK:
