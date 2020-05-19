@@ -1,5 +1,5 @@
 from typing import Dict
-
+from benedict.gameState import GameState
 
 class TreasonAgent:
     """ Don't put the model in here. """
@@ -13,8 +13,8 @@ class TreasonAgent:
         """ Returns state of agent. """
         pass
 
-    def process(self, GameState: state):
-        """ Returns vector output of the model, given the game state. """
+    def process(self, state: GameState):
+        """ Returns converted output of the model, given the game state. """
         pass
 
     def reset(self):

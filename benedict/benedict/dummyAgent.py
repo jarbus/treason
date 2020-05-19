@@ -1,7 +1,7 @@
 from benedict.agent import TreasonAgent
 from benedict.gameEnum import TreasonState, TreasonRole, TreasonAction, TreasonCommand
 from benedict.gameState import GameState
-from benedict.nnio import cards, states, actions, commands 
+from benedict.nnio import vector_to_emission, cards, states, actions, commands 
 
 
 # listification
@@ -74,4 +74,4 @@ class DummyAgent(TreasonAgent):
         nn_output += listify(None, cards) # exchange cards will always be 0
         nn_output += listify(None, cards)
 
-        return nn_output
+        return vector_to_emission(nn_output)

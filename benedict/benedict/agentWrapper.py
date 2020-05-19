@@ -4,8 +4,6 @@ from typing import Callable, Dict
 from benedict.agent import TreasonAgent
 from benedict.gameEnum import TreasonState
 from benedict.gameState import GameState
-from benedict.nnio import state_to_vector, vector_to_emission
-
 
 # socketio decorators don't work with classes
 class TreasonAgentWrapper:
@@ -120,14 +118,7 @@ class TreasonAgentWrapper:
                 })
         # we are in a game: use the agent to play
         else:
-            vectorized_state = state_to_vector(state)
-
-            # USED FOR DummyAgent-- TODO - make DummyAgent work with vector input
-            nn_output = self.agent.process(state)
-
-            # we should really use the commented-out line below
-            # nn_output = self.agent.process(vectorized_state)
-            emission_data = vector_to_emission(nn_output, state)
             # TO DO: verify if emission_data is a valid response given the state
+            emission_data = self.agent.process(state)
             if emission_data:
                 self._sio.emit('command', emission_data)
