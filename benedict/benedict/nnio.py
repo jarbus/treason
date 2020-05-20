@@ -173,7 +173,7 @@ def vector_to_emission(vector, state: GameState):
     # target
     if "action" in emission and action in {TreasonAction.STEAL, TreasonAction.ASSASSINATE, TreasonAction.COUP}:
         target = vec_argmax(vector, start_position, [i for i in range(1, state.numPlayers)])
-        target = (target-state.selfId) % state.numPlayers
+        target = (state.selfId + target) % state.numPlayers
         emission["target"] = target
     start_position += state.numPlayers-1
 
