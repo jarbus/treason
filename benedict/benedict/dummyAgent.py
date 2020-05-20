@@ -36,7 +36,7 @@ class DummyAgent(TreasonAgent):
                         p = (i+state.selfId) % state.numPlayers
                         # if they have less than 2 cards face up
                         if sum([int(c[1]) for c in state.influence(p)]) < 2:
-                            target = p
+                            target = i
                             break
                 # income
                 else:
@@ -73,7 +73,7 @@ class DummyAgent(TreasonAgent):
 
         nn_output += listify(command, commands)
         nn_output += listify(action, actions)
-        nn_output += listify(target, [i+1 for i in range(state.numPlayers-1)])
+        nn_output += listify(target, [i for i in range(1, state.numPlayers)])
         nn_output += [0] # we will never block, so blockingRole bit is 0
         nn_output += listify(reveal, cards)
         nn_output += listify(None, cards) # exchange cards will always be 0
