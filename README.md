@@ -1,3 +1,7 @@
+Fork Changes
+------------
+In `benedict/` we are developing an agent that will learn to play Coup using deep reinforcement learning.
+
 Treason Coup
 ------------
 
