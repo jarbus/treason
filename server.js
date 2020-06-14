@@ -226,7 +226,7 @@ function createNewGame(socket, password) {
 
     var game = createGame({
         debug: argv.debug,
-        logger: winston,
+        logger: false,
         moveDelay: 1000,
         gameName: gameName,
         created: new Date(),
